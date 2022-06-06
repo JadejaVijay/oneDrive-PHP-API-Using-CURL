@@ -73,7 +73,7 @@ class onedrive {
 	
 		if (@array_key_exists('error', $response)) {
 			throw new Exception($response['error'] . " - " . $response['description']);
-			exit;
+			exit; 
 		} else {
 			$arraytoreturn = array();
 			$temparray = array(); 
