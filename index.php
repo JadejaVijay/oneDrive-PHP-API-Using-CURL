@@ -56,7 +56,7 @@ if (!$token) { // If no token, prompt to login. Call onedrive_auth::build_oauth_
 		}
 		
 		$properties = $sd->get_folder_properties($_GET['folderid']);
-	}
+	} 
 	
 	// Now we've got our files and folder properties, time to display them.
 	

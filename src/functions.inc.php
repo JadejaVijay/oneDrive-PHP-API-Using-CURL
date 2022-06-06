@@ -76,7 +76,7 @@ class onedrive {
 			exit;
 		} else {
 			$arraytoreturn = array();
-			$temparray = array();
+			$temparray = array(); 
 				
 			$array = $response['value'];
 			foreach ($array as $obj) {
