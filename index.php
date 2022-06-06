@@ -73,8 +73,12 @@ if (!$token) { // If no token, prompt to login. Call onedrive_auth::build_oauth_
 			echo "<img src='statics/folder-icon.png' width='32px' style='vertical-align: middle;'>&nbsp";
 			echo "<span style='vertical-align: middle;'><a title='Open folder' href='index.php?folderid=".$item['id']."'>".$item['name']."</a></span>";
 		} else {
+			
 			echo "<img src='statics/".$item['type']."-icon.png' width='32px' style='vertical-align: middle;'>&nbsp";
 			echo "<span style='vertical-align: middle;'><a title='Download' href='download.php?fileid=".$item['id']."'>".$item['name']."</a><br>";
+			if($item['image_url'] != ''){
+				echo "<img src='".$item['image_url']."' width='100px' height='100px' style='vertical-align: middle;'>&nbsp";
+			}
 			echo "<a href='properties.php?fileid=".$item['id']."'>Properties</a></span>";
 		}
 		echo "</div>";

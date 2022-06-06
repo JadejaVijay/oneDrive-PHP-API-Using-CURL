@@ -22,7 +22,7 @@ class onedrive {
 	// Or leave the second parameter blank for the root directory (/me/skydrive/files)
 	// Returns an array of the contents of the folder.
 
-	public function get_folder($folderid, $sort_by='name', $sort_order='ascending', $limit='255', $offset='0') {
+	/*public function get_folder($folderid, $sort_by='name', $sort_order='ascending', $limit='255', $offset='0') {
 		if ($folderid === null) {
 			$response = $this->curl_get(onedrive_base_url."me/skydrive/files?sort_by=".$sort_by."&sort_order=".$sort_order."&offset=".$offset."&limit=".$limit."&access_token=".$this->access_token);
 		} else {
@@ -59,6 +59,52 @@ class onedrive {
 			} else {
 				$arraytoreturn['paging'] = Array('previousoffset' => 0, 'nextoffset' => 0);
 			}
+			return $arraytoreturn;
+		}
+	}*/
+	public function get_folder($folderid, $sort_by = 'name', $sort_order = 'ascending', $limit = '255', $offset = '0')
+	{
+		if ($folderid === null) {
+			$response = $this->curl_get(onedrive_base_url . "drive/root/children");
+		} else {
+
+			$response = $this->curl_get(onedrive_base_url . "/me/drive/items/" . $folderid . "/children");
+		}
+	
+		if (@array_key_exists('error', $response)) {
+			throw new Exception($response['error'] . " - " . $response['description']);
+			exit;
+		} else {
+			$arraytoreturn = array();
+			$temparray = array();
+				
+			$array = $response['value'];
+			foreach ($array as $obj) {
+				$thumb_url = '';
+				if (@array_key_exists('id', $obj)) {
+					if (isset($obj['folder'])) {
+						$type = "folder";
+						$download_link = "";
+					} else {
+						$type = "file";
+						$download_link = $obj['@microsoft.graph.downloadUrl'];
+					}
+					if (isset($obj['file'])) {
+						$thumb_url = '';
+						$is_image = explode('/', $obj['file']['mimeType']);
+						if ($is_image[0] == 'image') {
+
+							$response_image = $this->curl_get(onedrive_base_url . "/me/drive/items/" . $obj['id'] . "/thumbnails");
+
+							$thumb_url = $response_image['value'][0]['large']['url'];
+
+						}
+					}
+					array_push($temparray, array('name' => $obj['name'], 'id' => $obj['id'], 'size' => $obj['size'], 'type' => $type, 'download_link' => $download_link, 'image_url' => $thumb_url));
+				}
+			}
+			$arraytoreturn['data'] = $temparray;
+		
 			return $arraytoreturn;
 		}
 	}
